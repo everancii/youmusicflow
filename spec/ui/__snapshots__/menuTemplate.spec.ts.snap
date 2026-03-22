@@ -1,0 +1,66 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`menuTemplate createMenuTemplate() 1`] = `
+[
+  {
+    "label": "Minimal YouTube Music Player",
+    "submenu": [
+      {
+        "label": "About this application",
+        "role": "about",
+      },
+      {
+        "accelerator": "CmdOrCtrl+W",
+        "label": "Close Window",
+        "role": "close",
+      },
+      {
+        "type": "separator",
+      },
+      {
+        "accelerator": "CmdOrCtrl+Q",
+        "click": [Function],
+        "label": "Quit",
+      },
+    ],
+  },
+  {
+    "label": "Edit",
+    "submenu": [
+      {
+        "accelerator": "CmdOrCtrl+Z",
+        "label": "Undo",
+        "role": "undo",
+      },
+      {
+        "accelerator": "Shift+CmdOrCtrl+Z",
+        "label": "Redo",
+        "role": "redo",
+      },
+      {
+        "accelerator": "CmdOrCtrl+X",
+        "label": "Cut",
+        "role": "cut",
+      },
+      {
+        "accelerator": "CmdOrCtrl+C",
+        "label": "Copy",
+        "role": "copy",
+      },
+      {
+        "accelerator": "CmdOrCtrl+V",
+        "label": "Paste",
+        "role": "paste",
+      },
+      {
+        "type": "separator",
+      },
+      {
+        "accelerator": "CmdOrCtrl+A",
+        "label": "Select All",
+        "role": "selectAll",
+      },
+    ],
+  },
+]
+`;

@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2020",                       /* Specify ECMAScript target version */
+    "module": "commonjs",                     /* Specify module code generation */
+    "outDir": "./app",                        /* Redirect output structure to the directory. */
+    "rootDir": "./src",                       /* Specify the root directory of input files. */
+    "resolveJsonModule": true,
+
+    /* Strict Type-Checking Options */
+    "strict": true,                           /* Enable all strict type-checking options. */
+    "noImplicitAny": false,                   /* Allow implicit any for easier migration */
+
+    /* Module Resolution Options */
+    "moduleResolution": "node",               /* Specify module resolution strategy */
+    "types": [
+      "node",
+      "jest"
+    ],                           /* Type declaration files to be included in compilation. */
+    "esModuleInterop": true,                  /* Enables emit interoperability between CommonJS and ES Modules */
+    "skipLibCheck": true                      /* Skip type checking of declaration files. */
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

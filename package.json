@@ -1,0 +1,102 @@
+{
+  "name": "minimalytm",
+  "version": "1.0.0",
+  "main": "app/main.js",
+  "private": true,
+  "scripts": {
+    "start": "npm run build && electron ./app/main.js",
+    "build": "tsc && node copy-assets.js",
+    "watch": "tsc --watch",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "format": "prettier './src/**/*.{js,ts}' --write",
+    "test": "jest --verbose",
+    "test:coverage": "jest --coverage"
+  },
+  "build": {
+    "productName": "Minimal YouTube Music Player",
+    "appId": "jp.elevenback.minimalytm",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "app/**/*",
+      "assets/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "icon": "assets/icon.icns",
+      "publish": {
+        "provider": "s3",
+        "bucket": "minimalytm-binaries",
+        "region": "ap-northeast-1"
+      },
+      "extendInfo": {
+        "LSUIElement": 1
+      }
+    },
+    "win": {
+      "icon": "assets/icon.png",
+      "publish": {
+        "provider": "s3",
+        "bucket": "minimalytm-binaries",
+        "region": "ap-northeast-1"
+      },
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "appx",
+          "arch": [
+            "x64"
+          ]
+        }
+      ]
+    },
+    "appx": {
+      "identityName": "MinimalYouTubeMusicPlayer",
+      "publisher": "CN=YourPartnerCenterPublisher",
+      "publisherDisplayName": "Your Publisher Display Name",
+      "displayName": "Minimal YouTube Music Player",
+      "capabilities": [
+        "runFullTrust"
+      ],
+      "backgroundColor": "#464646",
+      "languages": [
+        "en-US"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    }
+  },
+  "dependencies": {
+    "@types/semver": "^7.7.1",
+    "electron-log": "^5.4.3",
+    "electron-store": "^8.1.0",
+    "electron-updater": "^6.8.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^30.0.0",
+    "@types/jsdom": "^27.0.0",
+    "@types/node": "^25.3.0",
+    "codecov": "^3.8.3",
+    "electron": "^40.8.3",
+    "electron-builder": "^26.8.1",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
+    "jsdom": "^28.1.0",
+    "prettier": "^3.8.1",
+    "standard-version": "^9.5.0",
+    "to-ico-cli": "^1.0.0",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  }
+}

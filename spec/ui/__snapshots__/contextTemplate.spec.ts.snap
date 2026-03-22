@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`contextTemplate createContextTemplate() 1`] = `
+[
+  {
+    "click": [Function],
+    "label": "Settings",
+  },
+  {
+    "accelerator": "CmdOrCtrl+Q",
+    "click": [Function],
+    "label": "Quit",
+  },
+]
+`;

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Settings - Minimal YouTube Music Player</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Settings</h1>
+        
+        <div class="section">
+            <h2>About</h2>
+            <div class="setting-item">
+                <span class="label">Version</span>
+                <span class="value" id="app-version">1.0.0</span>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Appearance</h2>
+            <div class="setting-item" id="window-position-setting">
+                <label for="window-position">Window Position</label>
+                <select id="window-position">
+                    <option value="auto">Auto-Detect</option>
+                    <option value="top-left">Top-Left</option>
+                    <option value="top-right">Top-Right</option>
+                    <option value="bottom-left">Bottom-Left</option>
+                    <option value="bottom-right">Bottom-Right</option>
+                </select>
+            </div>
+            <div class="setting-item">
+                <label for="always-on-top">Always on Top</label>
+                <input type="checkbox" id="always-on-top">
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>System</h2>
+            <div class="setting-item">
+                <label for="start-on-login">Start on Login</label>
+                <input type="checkbox" id="start-on-login">
+            </div>
+        </div>
+        
+        <div class="actions">
+            <button id="close-btn">Close</button>
+        </div>
+    </div>
+    <script src="renderer.js"></script>
+</body>
+</html>

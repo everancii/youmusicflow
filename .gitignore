@@ -1,0 +1,33 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+app/
+release/
+dist/
+out/
+build/
+
+# Tools/IDEs
+.cursor/
+.gemini/
+.trae/
+.vscode/
+.idea/
+
+# CI/CD and logs
+.circleci/
+appveyor.yml
+codecov.yml
+*.log
+yarn-error.log
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Design/Specs (optional to keep)
+openspec/
+
+# Icons (usually needed, but large)
+# assets/

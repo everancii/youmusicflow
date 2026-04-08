@@ -81,6 +81,14 @@ app.on('ready', () => {
 
   mainWindow.loadURL('https://music.youtube.com')
 
+  mainWindow.webContents.on('did-finish-load', () => {
+    mainWindow.webContents.insertCSS(`
+      html, body {
+        background-color: #ffffff !important;
+      }
+    `)
+  })
+
   // if (process.env.NODE_ENV !== 'production') {
   //   mainWindow.webContents.openDevTools()
   // }

@@ -18,7 +18,7 @@ import path from 'path'
 import { IPCEventNames } from './types/ipc'
 import { getSettings, updateSetting, getSetting } from './tools/settings'
 
-import './tools/auto-update'
+// Auto-update removed: Microsoft Store handles updates for appx distribution
 
 let mainWindow: BrowserWindow
 let settingsWindow: BrowserWindow | null = null
@@ -36,7 +36,9 @@ app.on('ready', () => {
   if (process.platform === 'darwin' && app.dock) {
     const iconPath = path.join(__dirname, '../assets', 'icon.png')
     const image = nativeImage.createFromPath(iconPath)
-    app.dock.setIcon(image)
+    if (!image.isEmpty()) {
+      app.dock.setIcon(image)
+    }
   }
 
   mainWindow = new BrowserWindow({
@@ -61,33 +63,56 @@ app.on('ready', () => {
     openAtLogin: getSetting('startOnLogin') as boolean
   })
 
-  // Block ads and trackers
-  const filter = {
-    urls: [
-      '*://*.doubleclick.net/*',
-      '*://*.google-analytics.com/*',
-      '*://*.googlesyndication.com/*',
-      '*://*.googleadservices.com/*',
-      '*://*.googletagservices.com/*'
-    ]
+  const updateDockVisibility = (hide: boolean) => {
+    if (process.platform === 'darwin' && app.dock) {
+      if (hide) {
+        app.dock.hide()
+      } else {
+        app.dock.show()
+        // Delay setting icon slightly to ensure dock has shown
+        setTimeout(() => {
+          const iconPath = path.join(__dirname, '../assets', 'icon.png')
+          const image = nativeImage.createFromPath(iconPath)
+          if (app.dock && !image.isEmpty()) {
+            app.dock.setIcon(image)
+          }
+        }, 200)
+      }
+    }
   }
 
-  mainWindow.webContents.session.webRequest.onBeforeRequest(
-    filter,
-    (details, callback) => {
-      callback({ cancel: true })
-    }
-  )
+  // Apply dock icon setting
+  updateDockVisibility(getSetting('hideDockIcon') as boolean)
 
   mainWindow.loadURL('https://music.youtube.com')
 
-  mainWindow.webContents.on('did-finish-load', () => {
+  const injectCSS = () => {
     mainWindow.webContents.insertCSS(`
       html, body {
-        background-color: #ffffff !important;
+        scrollbar-width: none !important; /* Firefox */
+      }
+      * {
+        -ms-overflow-style: none !important; /* IE/Edge */
+      }
+      ::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
+      }
+      *::-webkit-scrollbar {
+        display: none !important;
+        width: 0 !important;
+        height: 0 !important;
+        background: transparent !important;
       }
     `)
-  })
+  }
+
+  mainWindow.webContents.on('did-finish-load', injectCSS)
+  mainWindow.webContents.on('did-navigate', injectCSS)
+  mainWindow.webContents.on('did-navigate-in-page', injectCSS)
+  mainWindow.webContents.on('dom-ready', injectCSS)
 
   // if (process.env.NODE_ENV !== 'production') {
   //   mainWindow.webContents.openDevTools()
@@ -235,9 +260,9 @@ app.on('ready', () => {
 
     settingsWindow = new BrowserWindow({
       width: 400,
-      height: 500,
+      height: 550,
       title: 'Settings',
-      resizable: false,
+      resizable: true, // Allow resizing to find perfect fit
       minimizable: false,
       maximizable: false,
       autoHideMenuBar: true,
@@ -283,6 +308,10 @@ app.on('ready', () => {
     
     if (key === 'windowPosition') {
       updateWindowPosition()
+    }
+
+    if (key === 'hideDockIcon') {
+      updateDockVisibility(value)
     }
   })
 })

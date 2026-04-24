@@ -5,6 +5,11 @@ body {
     margin: 0;
     padding: 20px;
     user-select: none;
+    overflow: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
 }
 
 .container {
@@ -28,6 +33,10 @@ h2 {
 
 .section {
     margin-bottom: 25px;
+}
+
+.section:last-of-type {
+    margin-bottom: 10px;
 }
 
 .setting-item {
@@ -64,7 +73,7 @@ input[type="checkbox"] {
 
 .actions {
     text-align: right;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 button {
@@ -79,4 +88,11 @@ button {
 
 button:hover {
     background-color: #cc0000;
+}
+
+.disclaimer {
+    font-size: 11px;
+    color: #666;
+    line-height: 1.4;
+    margin-top: 8px;
 }

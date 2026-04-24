@@ -11,12 +11,17 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (windowPositionSetting) {
             windowPositionSetting.style.display = 'none';
         }
+        const hideDockIconSetting = document.getElementById('hide-dock-icon-setting');
+        if (hideDockIconSetting) {
+            hideDockIconSetting.style.display = 'flex';
+        }
     }
 
     document.getElementById('app-version').textContent = version;
     document.getElementById('window-position').value = settings.windowPosition || 'auto';
     document.getElementById('start-on-login').checked = settings.startOnLogin || false;
     document.getElementById('always-on-top').checked = settings.alwaysOnTop || false;
+    document.getElementById('hide-dock-icon').checked = settings.hideDockIcon || false;
 
     // Listeners for changes
     document.getElementById('window-position').addEventListener('change', (e) => {
@@ -29,6 +34,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     document.getElementById('always-on-top').addEventListener('change', (e) => {
         ipcRenderer.send('update-setting', 'alwaysOnTop', e.target.checked);
+    });
+
+    document.getElementById('hide-dock-icon').addEventListener('change', (e) => {
+        ipcRenderer.send('update-setting', 'hideDockIcon', e.target.checked);
     });
 
     document.getElementById('close-btn').addEventListener('click', () => {

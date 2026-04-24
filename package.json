@@ -26,22 +26,12 @@
     ],
     "mac": {
       "icon": "assets/icon.icns",
-      "publish": {
-        "provider": "s3",
-        "bucket": "minimalytm-binaries",
-        "region": "ap-northeast-1"
-      },
       "extendInfo": {
         "LSUIElement": 1
       }
     },
     "win": {
       "icon": "assets/icon.png",
-      "publish": {
-        "provider": "s3",
-        "bucket": "minimalytm-binaries",
-        "region": "ap-northeast-1"
-      },
       "target": [
         {
           "target": "nsis",
@@ -80,8 +70,7 @@
   "dependencies": {
     "@types/semver": "^7.7.1",
     "electron-log": "^5.4.3",
-    "electron-store": "^8.1.0",
-    "electron-updater": "^6.8.3"
+    "electron-store": "^8.1.0"
   },
   "devDependencies": {
     "@types/jest": "^30.0.0",

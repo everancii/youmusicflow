@@ -4,6 +4,7 @@ interface AppSettings {
     windowPosition: 'auto' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     startOnLogin: boolean;
     alwaysOnTop: boolean;
+    hideDockIcon: boolean;
 }
 
 const schema = {
@@ -17,6 +18,10 @@ const schema = {
         default: false
     },
     alwaysOnTop: {
+        type: 'boolean',
+        default: false
+    },
+    hideDockIcon: {
         type: 'boolean',
         default: false
     }
@@ -34,7 +39,9 @@ export const getSettings = (): AppSettings => {
         // @ts-ignore
         startOnLogin: store.get('startOnLogin'),
         // @ts-ignore
-        alwaysOnTop: store.get('alwaysOnTop')
+        alwaysOnTop: store.get('alwaysOnTop'),
+        // @ts-ignore
+        hideDockIcon: store.get('hideDockIcon')
     };
 };
 

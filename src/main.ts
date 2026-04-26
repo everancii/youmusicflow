@@ -28,8 +28,8 @@ const WINDOW_WIDTH = 375
 const WINDOW_HEIGHT = 667
 
 if (process.platform === 'darwin') {
-  app.name = 'Minimal YouTube Music Player'
-  app.setName('Minimal YouTube Music Player')
+  app.name = 'YouMusicFlow'
+  app.setName('YouMusicFlow')
 }
 
 app.on('ready', () => {
@@ -129,7 +129,7 @@ app.on('ready', () => {
 
   Menu.setApplicationMenu(Menu.buildFromTemplate(createMenuTemplate(app)))
 
-  tray.setToolTip('Minimal YouTube Music Player')
+  tray.setToolTip('YouMusicFlow')
 
   const updateWindowPosition = () => {
     if (PlatformResolver.isWindows()) {

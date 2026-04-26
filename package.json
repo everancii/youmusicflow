@@ -1,5 +1,5 @@
 {
-  "name": "minimalytm",
+  "name": "youmusicflow",
   "version": "1.0.0",
   "main": "app/main.js",
   "private": true,
@@ -14,8 +14,8 @@
     "test:coverage": "jest --coverage"
   },
   "build": {
-    "productName": "Minimal YouTube Music Player",
-    "appId": "jp.elevenback.minimalytm",
+    "productName": "YouMusicFlow",
+    "appId": "jp.elevenback.youmusicflow",
     "directories": {
       "output": "release"
     },
@@ -48,10 +48,10 @@
       ]
     },
     "appx": {
-      "identityName": "MinimalYouTubeMusicPlayer",
+      "identityName": "YouMusicFlow",
       "publisher": "CN=YourPartnerCenterPublisher",
       "publisherDisplayName": "Your Publisher Display Name",
-      "displayName": "Minimal YouTube Music Player",
+      "displayName": "YouMusicFlow",
       "capabilities": [
         "runFullTrust"
       ],

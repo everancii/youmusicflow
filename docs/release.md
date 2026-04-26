@@ -14,7 +14,7 @@ The Windows build produces an AppX package for Microsoft Store submission in add
 
 - **Store submission package path:**  
   `release/<ProductName> <version>.appx`  
-  Example: `release/Minimal YouTube Music Player 1.0.0.appx`
+  Example: `release/YouMusicFlow 1.0.0.appx`
 
 - **Build requirement:** The Store (AppX) package can only be built on **Windows**. Use a Windows host or a Windows runner in CI.
 
@@ -24,4 +24,4 @@ The Windows build produces an AppX package for Microsoft Store submission in add
 
 ### NSIS installer
 
-The same build produces the NSIS installer (e.g. `release/Minimal YouTube Music Player Setup 1.0.0.exe`) for direct distribution. Existing behavior is unchanged.
+The same build produces the NSIS installer (e.g. `release/YouMusicFlow Setup 1.0.0.exe`) for direct distribution. Existing behavior is unchanged.

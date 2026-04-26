@@ -1,4 +1,4 @@
-# Minimal YouTube Music Player
+# YouMusicFlow
 
 A compact, frameless, tray-based mini-player that wraps [YouTube Music](https://music.youtube.com) in a lightweight Electron window. Lives in your system tray — click to show, click away to hide.
 
@@ -33,7 +33,7 @@ Download the latest release for your platform from the [Releases](https://github
 ### Windows
 
 - **Installer:** Download and run the NSIS setup executable
-- **Microsoft Store:** Available on the Microsoft Store (search "Minimal YouTube Music Player")
+- **Microsoft Store:** Available on the Microsoft Store (search "YouMusicFlow")
 
 ### Linux
 

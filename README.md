@@ -1,5 +1,3 @@
-# Minimal YouTube Music Player
-
 A compact, frameless, tray-based mini-player that wraps [YouTube Music](https://music.youtube.com) in a lightweight Electron window. Lives in your system tray — click to show, click away to hide.
 
 ![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-blue)
@@ -22,7 +20,7 @@ A compact, frameless, tray-based mini-player that wraps [YouTube Music](https://
 
 ## Install
 
-Download the latest release for your platform from the [Releases](https://github.com/everancii/youmus/releases) page.
+Download the latest release for your platform from the [Releases](https://github.com/everancii/youmusicflow/releases) page.
 
 ### macOS
 

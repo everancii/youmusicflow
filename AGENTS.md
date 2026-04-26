@@ -1,4 +1,4 @@
-# AGENTS.md — Minimal YouTube Music Player
+# AGENTS.md — YouMusicFlow
 
 Electron desktop app that wraps [YouTube Music](https://music.youtube.com) in a compact, frameless, tray-based mini-player. Cross-platform (macOS, Windows, Linux).
 
@@ -25,7 +25,7 @@ main.ts (Electron main process)
 │       └── controls.ts: DOM queries against YouTube Music's actual DOM
 │           (e.g. #play-pause-button, ytmusic-player-queue-item[selected])
 ├── tools/auto-update.ts: self-updater via electron-updater (side-effect import)
-├── tools/settings.ts: persistent settings via electron-store (key: minimalytm-config)
+├── tools/settings.ts: persistent settings via electron-store (key: youmusicflow-config)
 ├── ui/menuTemplate.ts: app menu bar
 ├── ui/contextTemplate.ts: tray right-click context menu
 └── Settings window: separate BrowserWindow loading src/settings/ (plain HTML/CSS/JS,
@@ -60,7 +60,7 @@ main.ts (Electron main process)
 ## Platform-Specific Behavior
 
 - `platformResolver.ts` uses `os.type()` to detect OS. Tests override this with `setCustomType()`.
-- **macOS:** App name forced to "Minimal YouTube Music Player" (overrides Electron default). Dock icon set explicitly. Tray icon adapts to dark/light mode via `nativeTheme.shouldUseDarkColors`. Window positioned relative to tray icon with pixel offsets. `windowPosition` setting is hidden on macOS (settings UI hides the dropdown).
+- **macOS:** App name forced to "YouMusicFlow" (overrides Electron default). Dock icon set explicitly. Tray icon adapts to dark/light mode via `nativeTheme.shouldUseDarkColors`. Window positioned relative to tray icon with pixel offsets. `windowPosition` setting is hidden on macOS (settings UI hides the dropdown).
 - **Windows:** Window positioned relative to taskbar using `getTrayPosition()` logic. Supports NSIS and AppX (Microsoft Store) targets. AppX can only be built on Windows.
 - `offsetCalclator.ts` (note: typo in filename — "Calclator") provides per-OS pixel offsets for tray-to-window positioning.
 
@@ -72,5 +72,5 @@ main.ts (Electron main process)
 - macOS: `LSUIElement: 1` in build config means the app appears as a background/tray-only app (no Dock icon unless explicitly set).
 - `auto-update.ts` is imported purely for side effects — it registers its own `app.on('ready')` listener.
 - The `app/` directory is the build output and is gitignored. Never manually edit files there.
-- `minimalytm-config.json` in the repo root is a sample/defaults config — the actual runtime config is managed by `electron-store` in the user's data directory.
-- Binary publishing is configured for S3 (`minimalytm-binaries` bucket, `ap-northeast-1`).
+- `youmusicflow-config.json` in the repo root is a sample/defaults config — the actual runtime config is managed by `electron-store` in the user's data directory.
+- Binary publishing is configured for S3 (`youmusicflow-binaries` bucket, `ap-northeast-1`).

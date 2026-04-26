@@ -3,7 +3,7 @@
 exports[`menuTemplate createMenuTemplate() 1`] = `
 [
   {
-    "label": "Minimal YouTube Music Player",
+    "label": "YouMusicFlow",
     "submenu": [
       {
         "label": "About this application",

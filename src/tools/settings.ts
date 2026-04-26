@@ -29,7 +29,7 @@ const schema = {
 
 const store = new Store<AppSettings>({ 
     schema: schema as any,
-    name: 'minimalytm-config'
+    name: 'youmusicflow-config'
 });
 
 export const getSettings = (): AppSettings => {

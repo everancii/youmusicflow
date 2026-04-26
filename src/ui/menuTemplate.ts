@@ -3,7 +3,7 @@ import { App, MenuItemConstructorOptions } from 'electron'
 export function createMenuTemplate(app: App): MenuItemConstructorOptions[] {
   return [
     {
-      label: 'Minimal YouTube Music Player',
+      label: 'YouMusicFlow',
       submenu: [
         {
           label: 'About this application',

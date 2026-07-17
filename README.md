@@ -18,7 +18,7 @@ A compact, frameless, tray-based mini-player that wraps [YouTube Music](https://
 
 ## Screenshots
 
-> Add screenshots here if available.
+![YouMusicFlow mini-player](screenshots/first.png)
 
 ## Install
 

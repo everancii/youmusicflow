@@ -6,7 +6,8 @@ import {
   screen,
   globalShortcut,
   ipcMain,
-  nativeImage
+  nativeImage,
+  nativeTheme
 } from 'electron'
 import { createMenuTemplate } from './ui/menuTemplate'
 import * as offsetCalclator from './tools/offsetCalclator'
@@ -136,6 +137,14 @@ app.on('ready', () => {
   tray = new Tray(
     path.join(__dirname, '../assets', getNativeIconName())
   )
+
+  // macOS: swap tray icon live when the system theme changes
+  nativeTheme.on('updated', () => {
+    if (PlatformResolver.isMacOS()) {
+      tray.setImage(path.join(__dirname, '../assets', getNativeIconName()))
+    }
+  })
+
   const offset = offsetCalclator.getOffset()
 
   mainWindow.on('blur', () => {

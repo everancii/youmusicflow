@@ -6,7 +6,7 @@ Harden an existing, working tray mini-player: first make controls and instancing
 
 ## Phases
 
-- [ ] **Phase 1: Reliable Core** - Single instance, robust prev/next, media-key toggle, live tray theming
+- [x] **Phase 1: Reliable Core** - Single instance, robust prev/next, media-key toggle, live tray theming (completed 2026-07-27)
 - [ ] **Phase 2: Modular Main & Typed Settings** - Decompose main.ts, type settings end-to-end, harden settings window
 - [ ] **Phase 3: Robust Shell & Now Playing** - External links, offline retry, now-playing surfacing, resizable/pinnable window
 - [ ] **Phase 4: Hygiene & CI** - Dependency/lockfile cleanup, GitHub Actions, accurate AGENTS.md
@@ -26,8 +26,8 @@ Harden an existing, working tray mini-player: first make controls and instancing
 **Plans**: 2 plans
 
 Plans:
-- [ ] 01-01: Single-instance lock + media-key setting toggle (register/unregister live)
-- [ ] 01-02: Player-bar prev/next controls + runtime tray theme reaction
+- [x] 01-01: Single-instance lock + media-key setting toggle (register/unregister live)
+- [x] 01-02: Player-bar prev/next controls + runtime tray theme reaction
 
 ### Phase 2: Modular Main & Typed Settings
 **Goal**: main.ts split into testable modules; settings typed and sandboxed

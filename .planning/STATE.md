@@ -1,12 +1,12 @@
 ---
 gsd_state_version: '1.0'
-status: planning
+status: executing
 progress:
   total_phases: 4
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 8
-  completed_plans: 0
-  percent: 0
+  completed_plans: 2
+  percent: 25
 ---
 
 # Project State
@@ -16,21 +16,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-26)
 
 **Core value:** Media keys and tray interactions must always work.
-**Current focus:** Phase 1 — Reliable Core
+**Current focus:** Phase 2 — Modular Main & Typed Settings (next)
 
 ## Current Position
 
-Phase: 1 of 4 (Reliable Core)
-Plan: 2 plans created (01-01, 01-02)
-Status: Ready to execute
-Last activity: 2026-07-27 — Phase 1 planned (RESEARCH.md + 2 plans, waves 1→2)
+Phase: 1 of 4 (Reliable Core) — COMPLETE
+Plan: 2 of 2 executed (01-01, 01-02)
+Status: Phase 1 complete; ready to plan phase 2
+Last activity: 2026-07-27 — Phase 1 executed (4 feature/fix commits, 6/6 suites, 18 tests)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██▓░░░░░░░] 25%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
+- Total plans completed: 2
 - Average duration: -
 - Total execution time: -
 
@@ -38,7 +38,7 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| - | - | - | - |
+| 01-reliable-core | 2 | - | - |
 
 ## Accumulated Context
 
@@ -52,6 +52,7 @@ Recent decisions affecting current work:
 - Blur-hide tied to alwaysOnTop (no new setting)
 - CI = single GitHub Actions workflow
 - AppX/MS Store dropped this milestone
+- Jest ESM fix: custom transformer (jest.esm-transformer.js) downlevels jsdom 28's ESM-only deps
 
 ### Pending Todos
 
@@ -64,6 +65,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-07-26
-Stopped at: Roadmap created; ready for /gsd-plan-phase 1
+Last session: 2026-07-27
+Stopped at: Phase 1 complete; next: /gsd-plan-phase 2
 Resume file: None

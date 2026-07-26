@@ -7,13 +7,13 @@
 
 ### Instance & Controls
 
-- [ ] **INST-01**: Launching the app a second time focuses the existing instance — no duplicate tray icons or shortcut registrations
-- [ ] **CTRL-01**: User can skip prev/next reliably via player-bar buttons (`.previous-button`/`.next-button`), including when the queue panel is not rendered and at queue boundaries
-- [ ] **CTRL-02**: User can disable global media-key capture via a settings toggle (default: enabled); disabled state unregisters shortcuts so other apps receive media keys
+- [x] **INST-01**: Launching the app a second time focuses the existing instance — no duplicate tray icons or shortcut registrations
+- [x] **CTRL-01**: User can skip prev/next reliably via player-bar buttons (`.previous-button`/`.next-button`), including when the queue panel is not rendered and at queue boundaries
+- [x] **CTRL-02**: User can disable global media-key capture via a settings toggle (default: enabled); disabled state unregisters shortcuts so other apps receive media keys
 
 ### Tray
 
-- [ ] **TRAY-01**: macOS tray icon updates immediately when system theme changes at runtime (template image or `nativeTheme.on('updated')`)
+- [x] **TRAY-01**: macOS tray icon updates immediately when system theme changes at runtime (template image or `nativeTheme.on('updated')`)
 - [ ] **NOW-01**: User can see current track title/artist as tray tooltip (and tray title on macOS), updating on track change
 - [ ] **NOW-02**: User gets a desktop notification on track change, toggleable in settings
 

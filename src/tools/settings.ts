@@ -5,6 +5,7 @@ interface AppSettings {
     startOnLogin: boolean;
     alwaysOnTop: boolean;
     hideDockIcon: boolean;
+    enableMediaKeys: boolean;
 }
 
 const schema = {
@@ -24,6 +25,10 @@ const schema = {
     hideDockIcon: {
         type: 'boolean',
         default: false
+    },
+    enableMediaKeys: {
+        type: 'boolean',
+        default: true
     }
 };
 
@@ -41,7 +46,9 @@ export const getSettings = (): AppSettings => {
         // @ts-ignore
         alwaysOnTop: store.get('alwaysOnTop'),
         // @ts-ignore
-        hideDockIcon: store.get('hideDockIcon')
+        hideDockIcon: store.get('hideDockIcon'),
+        // @ts-ignore
+        enableMediaKeys: store.get('enableMediaKeys')
     };
 };
 

@@ -32,7 +32,22 @@ if (process.platform === 'darwin') {
   app.setName('YouMusicFlow')
 }
 
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      mainWindow.show()
+      mainWindow.focus()
+    }
+  })
+}
+
 app.on('ready', () => {
+  if (!gotTheLock) return
+
   if (process.platform === 'darwin' && app.dock) {
     const iconPath = path.join(__dirname, '../assets', 'icon.png')
     const image = nativeImage.createFromPath(iconPath)
@@ -238,17 +253,31 @@ app.on('ready', () => {
     tray.popUpContextMenu(Menu.buildFromTemplate(createContextTemplate(app)))
   })
 
-  globalShortcut.register('MediaPlayPause', () => {
-    mainWindow.webContents.send(IPCEventNames.PLAY_PAUSE)
-  })
+  const registerMediaKeys = () => {
+    if (globalShortcut.isRegistered('MediaPlayPause')) return
 
-  globalShortcut.register('MediaPreviousTrack', () => {
-    mainWindow.webContents.send(IPCEventNames.PREV)
-  })
+    globalShortcut.register('MediaPlayPause', () => {
+      mainWindow.webContents.send(IPCEventNames.PLAY_PAUSE)
+    })
 
-  globalShortcut.register('MediaNextTrack', () => {
-    mainWindow.webContents.send(IPCEventNames.NEXT)
-  })
+    globalShortcut.register('MediaPreviousTrack', () => {
+      mainWindow.webContents.send(IPCEventNames.PREV)
+    })
+
+    globalShortcut.register('MediaNextTrack', () => {
+      mainWindow.webContents.send(IPCEventNames.NEXT)
+    })
+  }
+
+  const unregisterMediaKeys = () => {
+    globalShortcut.unregister('MediaPlayPause')
+    globalShortcut.unregister('MediaPreviousTrack')
+    globalShortcut.unregister('MediaNextTrack')
+  }
+
+  if (getSetting('enableMediaKeys') !== false) {
+    registerMediaKeys()
+  }
 
   // Settings Window Handlers
   // @ts-ignore
@@ -312,6 +341,14 @@ app.on('ready', () => {
 
     if (key === 'hideDockIcon') {
       updateDockVisibility(value)
+    }
+
+    if (key === 'enableMediaKeys') {
+      if (value) {
+        registerMediaKeys()
+      } else {
+        unregisterMediaKeys()
+      }
     }
   })
 })

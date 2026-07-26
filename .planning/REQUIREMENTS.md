@@ -58,23 +58,23 @@
 
 | REQ-ID | Phase |
 |--------|-------|
-| INST-01 | TBD |
-| CTRL-01 | TBD |
-| CTRL-02 | TBD |
-| TRAY-01 | TBD |
-| NOW-01 | TBD |
-| NOW-02 | TBD |
-| NAV-01 | TBD |
-| NAV-02 | TBD |
-| WIN-01 | TBD |
-| WIN-02 | TBD |
-| CODE-01 | TBD |
-| CODE-02 | TBD |
-| CODE-03 | TBD |
-| HYG-01 | TBD |
-| HYG-02 | TBD |
-| HYG-03 | TBD |
-| HYG-04 | TBD |
+| INST-01 | 1 |
+| CTRL-01 | 1 |
+| CTRL-02 | 1 |
+| TRAY-01 | 1 |
+| NOW-01 | 3 |
+| NOW-02 | 3 |
+| NAV-01 | 3 |
+| NAV-02 | 3 |
+| WIN-01 | 3 |
+| WIN-02 | 3 |
+| CODE-01 | 2 |
+| CODE-02 | 2 |
+| CODE-03 | 2 |
+| HYG-01 | 4 |
+| HYG-02 | 4 |
+| HYG-03 | 4 |
+| HYG-04 | 4 |
 
 ---
 *17 v1 requirements | 2 deferred | 5 exclusions*

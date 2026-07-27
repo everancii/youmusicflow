@@ -26,9 +26,9 @@
 
 ### Code Quality
 
-- [ ] **CODE-01**: `main.ts` decomposed into modules (`createMainWindow`, `createTray`, `registerShortcuts`, `registerIpc`); positioning logic unified — no hardcoded `375` duplicate
-- [ ] **CODE-02**: `settings.ts` fully typed — zero `@ts-ignore`; `updateSetting` key/value typed; `update-setting` IPC input validated
-- [ ] **CODE-03**: Settings window runs with `contextIsolation: true`, `nodeIntegration: false`, via a contextBridge preload
+- [x] **CODE-01**: `main.ts` decomposed into modules (`createMainWindow`, `createTray`, `registerShortcuts`, `registerIpc`); positioning logic unified — no hardcoded `375` duplicate
+- [x] **CODE-02**: `settings.ts` fully typed — zero `@ts-ignore`; `updateSetting` key/value typed; `update-setting` IPC input validated
+- [x] **CODE-03**: Settings window runs with `contextIsolation: true`, `nodeIntegration: false`, via a contextBridge preload
 
 ### Hygiene & Distribution
 

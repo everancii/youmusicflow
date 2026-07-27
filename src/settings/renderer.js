@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('start-on-login').checked = settings.startOnLogin || false;
     document.getElementById('always-on-top').checked = settings.alwaysOnTop || false;
     document.getElementById('enable-media-keys').checked = settings.enableMediaKeys !== false;
+    document.getElementById('show-notifications').checked = settings.showNotifications !== false;
     document.getElementById('hide-dock-icon').checked = settings.hideDockIcon || false;
 
     // Listeners for changes
@@ -37,6 +38,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     document.getElementById('enable-media-keys').addEventListener('change', (e) => {
         window.settingsAPI.updateSetting('enableMediaKeys', e.target.checked);
+    });
+
+    document.getElementById('show-notifications').addEventListener('change', (e) => {
+        window.settingsAPI.updateSetting('showNotifications', e.target.checked);
     });
 
     document.getElementById('hide-dock-icon').addEventListener('change', (e) => {

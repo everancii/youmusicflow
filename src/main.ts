@@ -9,6 +9,7 @@ import { createMainWindow } from './main-process/createMainWindow'
 import { createTray } from './main-process/createTray'
 import { createSettingsWindow } from './main-process/createSettingsWindow'
 import { registerIpc } from './main-process/registerIpc'
+import { registerNowPlaying } from './main-process/nowPlaying'
 import {
   registerMediaKeys,
   unregisterMediaKeys
@@ -78,6 +79,8 @@ app.on('ready', () => {
 
   // Initial position
   updateWindowPosition()
+
+  registerNowPlaying({ tray })
 
   if (getSetting('enableMediaKeys') !== false) {
     registerMediaKeys(mainWindow)

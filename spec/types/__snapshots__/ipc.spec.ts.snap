@@ -3,6 +3,7 @@
 exports[`ipc match IPCEventNames 1`] = `
 {
   "NEXT": "next",
+  "NOW_PLAYING": "now-playing",
   "PLAY_PAUSE": "play/pause",
   "PREV": "prev",
 }

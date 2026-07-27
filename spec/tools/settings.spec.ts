@@ -10,7 +10,7 @@ import { isValidSetting } from '../../src/tools/settings'
 
 describe('tools/settings.ts', () => {
   describe('isValidSetting()', () => {
-    test.each(['startOnLogin', 'alwaysOnTop', 'hideDockIcon', 'enableMediaKeys'])(
+    test.each(['startOnLogin', 'alwaysOnTop', 'hideDockIcon', 'enableMediaKeys', 'showNotifications'])(
       'accepts boolean values for %s',
       key => {
         expect(isValidSetting(key, true)).toBe(true)

@@ -6,6 +6,7 @@ export interface AppSettings {
     alwaysOnTop: boolean;
     hideDockIcon: boolean;
     enableMediaKeys: boolean;
+    showNotifications: boolean;
 }
 
 const WINDOW_POSITIONS = ['auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
@@ -31,6 +32,10 @@ const schema: Schema<AppSettings> = {
     enableMediaKeys: {
         type: 'boolean',
         default: true
+    },
+    showNotifications: {
+        type: 'boolean',
+        default: true
     }
 };
 
@@ -45,7 +50,8 @@ export const getSettings = (): AppSettings => {
         startOnLogin: store.get('startOnLogin'),
         alwaysOnTop: store.get('alwaysOnTop'),
         hideDockIcon: store.get('hideDockIcon'),
-        enableMediaKeys: store.get('enableMediaKeys')
+        enableMediaKeys: store.get('enableMediaKeys'),
+        showNotifications: store.get('showNotifications')
     };
 };
 
@@ -66,6 +72,7 @@ export const isValidSetting = (key: unknown, value: unknown): key is keyof AppSe
         case 'alwaysOnTop':
         case 'hideDockIcon':
         case 'enableMediaKeys':
+        case 'showNotifications':
             return typeof value === 'boolean';
         default:
             return false;

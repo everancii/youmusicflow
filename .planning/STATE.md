@@ -16,14 +16,14 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-26)
 
 **Core value:** Media keys and tray interactions must always work.
-**Current focus:** Phase 3 — Robust Shell & Now Playing (next)
+**Current focus:** Phase 3 — Robust Shell & Now Playing (planned)
 
 ## Current Position
 
-Phase: 2 of 4 (Modular Main & Typed Settings) — COMPLETE
-Plan: 2 of 2 executed (02-01, 02-02)
-Status: Phase 2 complete; ready to plan phase 3
-Last activity: 2026-07-27 — Phase 2 executed (3 commits, 7/7 suites, 30 tests)
+Phase: 3 of 4 (Robust Shell & Now Playing) — PLANNED
+Plan: 0 of 3 executed (03-01, 03-02, 03-03 ready)
+Status: Phase 3 planned; ready to execute
+Last activity: 2026-07-27 — Phase 3 planned (RESEARCH.md + 3 plans)
 
 Progress: [█████░░░░░] 50%
 
@@ -67,5 +67,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-07-27
-Stopped at: Phase 2 complete; next: /gsd-plan-phase 3
+Stopped at: Phase 3 planned; next: execute phase 3
 Resume file: None

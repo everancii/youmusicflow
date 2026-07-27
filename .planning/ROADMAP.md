@@ -75,7 +75,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: Dependency/lockfile cleanup + GitHub Actions workflow + AGENTS.md refresh
+- [x] 04-01: Dependency/lockfile cleanup + GitHub Actions workflow + AGENTS.md refresh
 
 ## Progress
 
@@ -84,7 +84,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Reliable Core | 0/2 | Not started | - |
-| 2. Modular Main & Typed Settings | 0/2 | Not started | - |
-| 3. Robust Shell & Now Playing | 0/3 | Not started | - |
-| 4. Hygiene & CI | 0/1 | Not started | - |
+| 1. Reliable Core | 2/2 | Complete | 2026-07-27 |
+| 2. Modular Main & Typed Settings | 2/2 | Complete | 2026-07-27 |
+| 3. Robust Shell & Now Playing | 3/3 | Complete | 2026-07-27 |
+| 4. Hygiene & CI | 1/1 | Complete | 2026-07-27 |

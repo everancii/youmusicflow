@@ -32,10 +32,10 @@
 
 ### Hygiene & Distribution
 
-- [ ] **HYG-01**: `@types/semver` removed (orphaned dependency)
-- [ ] **HYG-02**: Single lockfile — `yarn.lock` removed, npm canonical
-- [ ] **HYG-03**: GitHub Actions CI (mac/win/linux matrix: build + test) replaces CircleCI and AppVeyor
-- [ ] **HYG-04**: AGENTS.md matches reality (no auto-update.ts, no ad-blocking claim, new module layout documented)
+- [x] **HYG-01**: `@types/semver` removed (orphaned dependency)
+- [x] **HYG-02**: Single lockfile — `yarn.lock` removed, npm canonical
+- [x] **HYG-03**: GitHub Actions CI (mac/win/linux matrix: build + test) replaces CircleCI and AppVeyor
+- [x] **HYG-04**: AGENTS.md matches reality (no auto-update.ts, no ad-blocking claim, new module layout documented)
 
 ## v2 Requirements
 

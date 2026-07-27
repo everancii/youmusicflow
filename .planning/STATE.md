@@ -1,12 +1,12 @@
 ---
 gsd_state_version: '1.0'
-status: executing
+status: milestone-complete
 progress:
   total_phases: 4
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 8
-  completed_plans: 7
-  percent: 87
+  completed_plans: 8
+  percent: 100
 ---
 
 # Project State
@@ -16,21 +16,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-26)
 
 **Core value:** Media keys and tray interactions must always work.
-**Current focus:** Phase 4 — Hygiene & CI (next)
+**Current focus:** Milestone complete — all 4 phases done
 
 ## Current Position
 
-Phase: 4 of 4 (Hygiene & CI) — PLANNED
-Plan: 0 of 1 executed (04-01 ready)
-Status: Phase 4 planned; ready to execute
-Last activity: 2026-07-27 — Phase 4 planned (RESEARCH.md + 04-01-PLAN.md)
+Phase: 4 of 4 (Hygiene & CI) — COMPLETE
+Plan: 1 of 1 executed (04-01)
+Status: Milestone complete — all requirements shipped
+Last activity: 2026-07-27 — Phase 4 executed (3 commits, 9/9 suites, 58 tests)
 
-Progress: [████████░░] 87%
+Progress: [██████████] 100%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
+- Total plans completed: 8
 - Average duration: -
 - Total execution time: -
 
@@ -41,6 +41,7 @@ Progress: [████████░░] 87%
 | 01-reliable-core | 2 | - | - |
 | 02-modular-main-typed-settings | 2 | - | - |
 | 03-robust-shell-now-playing | 3 | - | - |
+| 04-hygiene-ci | 1 | - | - |
 
 ## Accumulated Context
 
@@ -68,5 +69,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-07-27
-Stopped at: Phase 4 planned; next: /gsd-execute-phase 4
+Stopped at: Milestone complete; next: /gsd-complete-milestone (or new milestone)
 Resume file: None

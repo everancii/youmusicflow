@@ -20,10 +20,10 @@ See: .planning/PROJECT.md (updated 2026-07-26)
 
 ## Current Position
 
-Phase: 3 of 4 (Robust Shell & Now Playing) — COMPLETE
-Plan: 3 of 3 executed (03-01, 03-02, 03-03)
-Status: Phase 3 complete; ready to plan phase 4
-Last activity: 2026-07-27 — Phase 3 executed (3 commits, 9/9 suites, 58 tests)
+Phase: 4 of 4 (Hygiene & CI) — PLANNED
+Plan: 0 of 1 executed (04-01 ready)
+Status: Phase 4 planned; ready to execute
+Last activity: 2026-07-27 — Phase 4 planned (RESEARCH.md + 04-01-PLAN.md)
 
 Progress: [████████░░] 87%
 
@@ -68,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-07-27
-Stopped at: Phase 3 complete; next: /gsd-plan-phase 4
+Stopped at: Phase 4 planned; next: /gsd-execute-phase 4
 Resume file: None

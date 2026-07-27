@@ -1,10 +1,8 @@
-const { ipcRenderer } = require('electron');
-
 // Load settings
 document.addEventListener('DOMContentLoaded', async () => {
-    const settings = await ipcRenderer.invoke('get-settings');
-    const version = await ipcRenderer.invoke('get-app-version');
-    const platform = await ipcRenderer.invoke('get-platform');
+    const settings = await window.settingsAPI.getSettings();
+    const version = await window.settingsAPI.getAppVersion();
+    const platform = await window.settingsAPI.getPlatform();
 
     if (platform === 'darwin') {
         const windowPositionSetting = document.getElementById('window-position-setting');
@@ -26,23 +24,23 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Listeners for changes
     document.getElementById('window-position').addEventListener('change', (e) => {
-        ipcRenderer.send('update-setting', 'windowPosition', e.target.value);
+        window.settingsAPI.updateSetting('windowPosition', e.target.value);
     });
 
     document.getElementById('start-on-login').addEventListener('change', (e) => {
-        ipcRenderer.send('update-setting', 'startOnLogin', e.target.checked);
+        window.settingsAPI.updateSetting('startOnLogin', e.target.checked);
     });
-    
+
     document.getElementById('always-on-top').addEventListener('change', (e) => {
-        ipcRenderer.send('update-setting', 'alwaysOnTop', e.target.checked);
+        window.settingsAPI.updateSetting('alwaysOnTop', e.target.checked);
     });
 
     document.getElementById('enable-media-keys').addEventListener('change', (e) => {
-        ipcRenderer.send('update-setting', 'enableMediaKeys', e.target.checked);
+        window.settingsAPI.updateSetting('enableMediaKeys', e.target.checked);
     });
 
     document.getElementById('hide-dock-icon').addEventListener('change', (e) => {
-        ipcRenderer.send('update-setting', 'hideDockIcon', e.target.checked);
+        window.settingsAPI.updateSetting('hideDockIcon', e.target.checked);
     });
 
     document.getElementById('close-btn').addEventListener('click', () => {

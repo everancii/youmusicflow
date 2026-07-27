@@ -22,8 +22,9 @@ export function createSettingsWindow(app: App) {
       autoHideMenuBar: true,
       icon: path.join(__dirname, '../../assets', PlatformResolver.isWindows() ? 'icon.ico' : 'icon.png'),
       webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false // For simple settings window
+        contextIsolation: true,
+        nodeIntegration: false,
+        preload: path.join(__dirname, '../settings/preload.js')
       }
     })
 

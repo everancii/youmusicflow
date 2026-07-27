@@ -6,7 +6,7 @@ Electron desktop app that wraps [YouTube Music](https://music.youtube.com) in a 
 
 | Command | What it does |
 |---|---|
-| `npm run build` | Compiles TypeScript (`src/` → `app/`) then copies settings UI assets into `app/settings/` via `copy-assets.js` |
+| `npm run build` | Compiles TypeScript (`src/` → `app/`) then copies settings UI + offline page assets via `copy-assets.js` |
 | `npm start` | Builds then launches Electron (`app/main.js`) |
 | `npm run watch` | Watches and recompiles TypeScript on change |
 | `npm test` | Runs Jest with `ts-jest` preset, verbose output |
@@ -15,62 +15,71 @@ Electron desktop app that wraps [YouTube Music](https://music.youtube.com) in a 
 | `npm run dist` | Packages distributable with `electron-builder` → `release/` |
 | `npm run pack` | Packages into a directory (no installer) |
 
+CI: GitHub Actions (`.github/workflows/ci.yml`) runs `npm ci` → build → test on ubuntu/macos/windows.
+
 ## Architecture & Data Flow
 
 ```
-main.ts (Electron main process)
-├── loads https://music.youtube.com into a frameless BrowserWindow
-├── client/index.ts (preload script via contextIsolation)
-│   └── listens for IPC media-key events → calls controls.ts
-│       └── controls.ts: DOM queries against YouTube Music's actual DOM
-│           (e.g. #play-pause-button, ytmusic-player-queue-item[selected])
-├── tools/auto-update.ts: self-updater via electron-updater (side-effect import)
-├── tools/settings.ts: persistent settings via electron-store (key: youmusicflow-config)
+main.ts (Electron main process — thin orchestrator)
+├── main-process/createMainWindow.ts: frameless BrowserWindow loading music.youtube.com
+│   ├── navigation guards (setWindowOpenHandler + will-navigate) via tools/navigationPolicy.ts
+│   │   — allowlisted hosts (music.youtube.com + Google auth); everything else → shell.openExternal
+│   ├── did-fail-load (main frame, not ERR_ABORTED) → loads src/offline/offline.html fallback
+│   ├── resizable; size restored from `windowSize` setting, persisted on debounced resize
+│   └── blur → hide, unless `alwaysOnTop` is enabled
+├── client/index.ts (preload, contextIsolation)
+│   ├── IPC media-key events → controls.ts (DOM queries against YouTube Music's DOM,
+│   │   e.g. #play-pause-button, player-bar previous/next buttons)
+│   ├── exposes `appShell.retry` (contextBridge) used by the offline page
+│   └── polls navigator.mediaSession.metadata (1s) → sends NOW_PLAYING to main
+├── main-process/nowPlaying.ts: NOW_PLAYING → tray tooltip, macOS tray title,
+│   optional track-change Notification (gated by `showNotifications` setting)
+├── main-process/createTray.ts, positionWindow.ts, registerShortcuts.ts, registerIpc.ts
+├── main-process/createSettingsWindow.ts: settings BrowserWindow
+│   (contextIsolation:true + src/settings/preload.ts exposing `settingsAPI`)
+├── tools/settings.ts: typed persistent settings via electron-store (key: youmusicflow-config)
 ├── ui/menuTemplate.ts: app menu bar
-├── ui/contextTemplate.ts: tray right-click context menu
-└── Settings window: separate BrowserWindow loading src/settings/ (plain HTML/CSS/JS,
-    NOT TypeScript — uses nodeIntegration:true, contextIsolation:false)
+└── ui/contextTemplate.ts: tray right-click context menu
 ```
 
 **Media key flow:** OS media key → `globalShortcut` in main → `webContents.send(IPCEventName)` → preload `ipcRenderer.on(...)` → DOM manipulation in `controls.ts`.
 
-**Settings window** is opened via `app.emit('open-settings')` from the tray context menu. It communicates with main through IPC handles (`get-settings`, `update-setting`, `get-platform`, `get-app-version`).
+**Settings window** is opened via `app.emit('open-settings')` from the tray context menu. It communicates with main through IPC (`get-settings`, `update-setting`, `get-platform`, `get-app-version`). The offline page uses `retry-load`.
 
 ## Build Output
 
 - TypeScript compiles from `src/` → `app/` (configured in `tsconfig.json`).
-- The settings UI (`src/settings/*.html,css,js`) is **not** compiled — it's copied verbatim to `app/settings/` by `copy-assets.js` during build.
-- The `mini-player/` directory under `src/` is currently empty.
-- `app/` is gitignored and regenerated on each build.
+- Non-TS assets are copied verbatim by `copy-assets.js`: `src/settings/{index.html,style.css,renderer.js}` → `app/settings/` and `src/offline/offline.html` → `app/offline/`.
+- `app/` is gitignored and regenerated on each build. Never manually edit files there.
 
 ## Code Style
 
-- **No semicolons**, **single quotes** (enforced by Prettier — `.prettierrc`).
+- **No semicolons**, **single quotes** (enforced by Prettier — `.prettierrc`). `settings.ts` and `src/settings/renderer.js` retain semicolon style.
 - TypeScript strict mode enabled, but `noImplicitAny` is `false`.
-- Several `@ts-ignore` comments exist in `settings.ts` due to `electron-store` schema typing friction.
 - Controls functions accept `document: any` — they operate on whatever DOM is injected (real or JSDOM).
 
 ## Testing
 
-- Tests live in `spec/` (mirrors `src/` structure), **not** co-located.
+- Tests live in `spec/` (mirrors `src/` structure, including `spec/main-process/`), **not** co-located.
 - Uses `ts-jest` with `node` environment. Some tests use `jsdom` directly (e.g. `controls.spec.ts` constructs DOM via `JSDOM`).
+- `jest.esm-transformer.js` downlevels jsdom 28's ESM-only deps (see `transformIgnorePatterns` in `jest.config.js`).
+- Main-process specs must `jest.mock('electron')` and `jest.mock('electron-store')` (class stub) before importing the module under test.
 - `platformResolver` is tested by calling `setCustomType()` to override `os.type()` at runtime.
-- Snapshot tests exist for `IPCEventNames` and UI templates — snapshots are in `spec/**/__snapshots__/`.
+- Snapshot tests exist for `IPCEventNames` (includes `NOW_PLAYING`) and UI templates — snapshots in `spec/**/__snapshots__/`.
 
 ## Platform-Specific Behavior
 
 - `platformResolver.ts` uses `os.type()` to detect OS. Tests override this with `setCustomType()`.
-- **macOS:** App name forced to "YouMusicFlow" (overrides Electron default). Dock icon set explicitly. Tray icon adapts to dark/light mode via `nativeTheme.shouldUseDarkColors`. Window positioned relative to tray icon with pixel offsets. `windowPosition` setting is hidden on macOS (settings UI hides the dropdown).
-- **Windows:** Window positioned relative to taskbar using `getTrayPosition()` logic. Supports NSIS and AppX (Microsoft Store) targets. AppX can only be built on Windows.
+- **macOS:** App name forced to "YouMusicFlow" (overrides Electron default). Dock icon set explicitly. Tray icon adapts to dark/light mode via `nativeTheme.shouldUseDarkColors`. Window positioned relative to tray icon with pixel offsets. `windowPosition` setting is hidden on macOS (settings UI hides the dropdown). Now-playing title shown next to the tray icon.
+- **Windows:** Window positioned relative to taskbar using `getTrayPosition()` logic. NSIS and AppX (Microsoft Store) targets configured; AppX can only be built on Windows.
 - `offsetCalclator.ts` (note: typo in filename — "Calclator") provides per-OS pixel offsets for tray-to-window positioning.
 
 ## Key Gotchas
 
-- **`offsetCalclator.ts`** has a typo in the filename (`Calclator` not `Calculator`). Don't "fix" this without updating all imports in `main.ts`.
-- The settings renderer (`src/settings/renderer.js`) uses CommonJS `require('electron')`, not ES imports — it's plain JS, not TypeScript.
-- Ad/tracker blocking is done via `webRequest.onBeforeRequest` filtering doubleclick.net, google-analytics.com, etc. — not a content blocker.
+- **`offsetCalclator.ts`** has a typo in the filename (`Calclator` not `Calculator`). Don't "fix" this without updating all imports.
+- The settings renderer (`src/settings/renderer.js`) is plain JS talking to `window.settingsAPI` (exposed by `src/settings/preload.ts`) — no direct `require('electron')`.
+- `windowSize` is a **main-process-only** setting: persisted on window resize, deliberately rejected by the `update-setting` IPC validator (`isValidSetting`). Renderer input is untrusted — NOW_PLAYING payloads are validated in `nowPlaying.ts`.
+- Positioning math uses live `mainWindow.getSize()` — don't reintroduce fixed-size constants into `positionWindow.ts` (they'd clobber user resizes).
+- External links (share, help, etc.) open in the default browser via the navigation allowlist — don't loosen `navigationPolicy.ts` without keeping Google auth hosts (login breaks without them).
 - macOS: `LSUIElement: 1` in build config means the app appears as a background/tray-only app (no Dock icon unless explicitly set).
-- `auto-update.ts` is imported purely for side effects — it registers its own `app.on('ready')` listener.
-- The `app/` directory is the build output and is gitignored. Never manually edit files there.
 - `youmusicflow-config.json` in the repo root is a sample/defaults config — the actual runtime config is managed by `electron-store` in the user's data directory.
-- Binary publishing is configured for S3 (`youmusicflow-binaries` bucket, `ap-northeast-1`).

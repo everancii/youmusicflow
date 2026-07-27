@@ -1,6 +1,6 @@
-import Store from 'electron-store';
+import Store, { Schema } from 'electron-store';
 
-interface AppSettings {
+export interface AppSettings {
     windowPosition: 'auto' | 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
     startOnLogin: boolean;
     alwaysOnTop: boolean;
@@ -8,10 +8,12 @@ interface AppSettings {
     enableMediaKeys: boolean;
 }
 
-const schema = {
+const WINDOW_POSITIONS = ['auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+const schema: Schema<AppSettings> = {
     windowPosition: {
         type: 'string',
-        enum: ['auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'],
+        enum: WINDOW_POSITIONS,
         default: 'auto'
     },
     startOnLogin: {
@@ -32,32 +34,40 @@ const schema = {
     }
 };
 
-const store = new Store<AppSettings>({ 
-    schema: schema as any,
+const store = new Store<AppSettings>({
+    schema,
     name: 'youmusicflow-config'
 });
 
 export const getSettings = (): AppSettings => {
     return {
-        // @ts-ignore
         windowPosition: store.get('windowPosition'),
-        // @ts-ignore
         startOnLogin: store.get('startOnLogin'),
-        // @ts-ignore
         alwaysOnTop: store.get('alwaysOnTop'),
-        // @ts-ignore
         hideDockIcon: store.get('hideDockIcon'),
-        // @ts-ignore
         enableMediaKeys: store.get('enableMediaKeys')
     };
 };
 
-export const updateSetting = (key: keyof AppSettings, value: any) => {
-    // @ts-ignore
+export const updateSetting = <K extends keyof AppSettings>(key: K, value: AppSettings[K]) => {
     store.set(key, value);
 };
 
-export const getSetting = (key: keyof AppSettings) => {
-    // @ts-ignore
+export const getSetting = <K extends keyof AppSettings>(key: K): AppSettings[K] => {
     return store.get(key);
+};
+
+// Guards untrusted renderer input before it reaches the store
+export const isValidSetting = (key: unknown, value: unknown): key is keyof AppSettings => {
+    switch (key) {
+        case 'windowPosition':
+            return typeof value === 'string' && WINDOW_POSITIONS.includes(value);
+        case 'startOnLogin':
+        case 'alwaysOnTop':
+        case 'hideDockIcon':
+        case 'enableMediaKeys':
+            return typeof value === 'boolean';
+        default:
+            return false;
+    }
 };

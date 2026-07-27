@@ -1,5 +1,5 @@
 import { App, BrowserWindow, ipcMain } from 'electron'
-import { getSettings, updateSetting } from '../tools/settings'
+import { getSettings, updateSetting, isValidSetting } from '../tools/settings'
 
 interface IpcDeps {
   app: App
@@ -31,6 +31,12 @@ export function registerIpc({
   })
 
   ipcMain.on('update-setting', (event, key, value) => {
+    // Renderer input is untrusted — reject unknown keys and wrong-typed values
+    if (!isValidSetting(key, value)) {
+      console.warn('rejected update-setting', key)
+      return
+    }
+
     updateSetting(key, value)
 
     // Apply changes immediately where possible

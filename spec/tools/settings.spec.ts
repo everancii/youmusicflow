@@ -30,6 +30,10 @@ describe('tools/settings.ts', () => {
       expect(isValidSetting(undefined, true)).toBe(false)
     })
 
+    test('rejects windowSize from renderer (main-process-only setting)', () => {
+      expect(isValidSetting('windowSize', { width: 500, height: 700 })).toBe(false)
+    })
+
     test('rejects invalid windowPosition values', () => {
       expect(isValidSetting('windowPosition', 'diagonal')).toBe(false)
       expect(isValidSetting('windowPosition', true)).toBe(false)

@@ -7,6 +7,8 @@ export interface AppSettings {
     hideDockIcon: boolean;
     enableMediaKeys: boolean;
     showNotifications: boolean;
+    // Persisted by the main process on resize — never settable from the renderer
+    windowSize: { width: number; height: number };
 }
 
 const WINDOW_POSITIONS = ['auto', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
@@ -36,6 +38,14 @@ const schema: Schema<AppSettings> = {
     showNotifications: {
         type: 'boolean',
         default: true
+    },
+    windowSize: {
+        type: 'object',
+        properties: {
+            width: { type: 'number' },
+            height: { type: 'number' }
+        },
+        default: { width: 375, height: 667 }
     }
 };
 
@@ -51,7 +61,8 @@ export const getSettings = (): AppSettings => {
         alwaysOnTop: store.get('alwaysOnTop'),
         hideDockIcon: store.get('hideDockIcon'),
         enableMediaKeys: store.get('enableMediaKeys'),
-        showNotifications: store.get('showNotifications')
+        showNotifications: store.get('showNotifications'),
+        windowSize: store.get('windowSize')
     };
 };
 

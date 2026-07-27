@@ -1,17 +1,27 @@
 import { app, BrowserWindow, nativeImage, shell } from 'electron'
 import path from 'path'
 import * as PlatformResolver from '../tools/platformResolver'
-import { getSetting } from '../tools/settings'
+import { getSetting, updateSetting } from '../tools/settings'
 import { isAllowedNavigation } from '../tools/navigationPolicy'
-import { WINDOW_WIDTH, WINDOW_HEIGHT } from './positionWindow'
+import { DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT } from './positionWindow'
 
 export function createMainWindow() {
+  const savedSize = getSetting('windowSize')
+  const width =
+    savedSize && typeof savedSize.width === 'number'
+      ? savedSize.width
+      : DEFAULT_WINDOW_WIDTH
+  const height =
+    savedSize && typeof savedSize.height === 'number'
+      ? savedSize.height
+      : DEFAULT_WINDOW_HEIGHT
+
   const mainWindow = new BrowserWindow({
-    width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT,
+    width,
+    height,
     transparent: true,
     frame: false,
-    resizable: false,
+    resizable: true,
     show: false,
     icon: path.join(__dirname, '../../assets', PlatformResolver.isWindows() ? 'icon.ico' : 'icon.png'),
     webPreferences: {
@@ -21,6 +31,18 @@ export function createMainWindow() {
       spellcheck: false
     },
     alwaysOnTop: getSetting('alwaysOnTop') as boolean
+  })
+
+  mainWindow.setMinimumSize(300, 400)
+
+  // Persist size across restarts (debounced)
+  let resizeTimer: NodeJS.Timeout
+  mainWindow.on('resize', () => {
+    clearTimeout(resizeTimer)
+    resizeTimer = setTimeout(() => {
+      const bounds = mainWindow.getBounds()
+      updateSetting('windowSize', { width: bounds.width, height: bounds.height })
+    }, 500)
   })
 
   // Apply login settings
@@ -103,7 +125,10 @@ export function createMainWindow() {
   mainWindow.webContents.on('dom-ready', injectCSS)
 
   mainWindow.on('blur', () => {
-    mainWindow.hide()
+    // A pinned (alwaysOnTop) window stays visible on blur
+    if (!getSetting('alwaysOnTop')) {
+      mainWindow.hide()
+    }
   })
 
   return { mainWindow, updateDockVisibility }

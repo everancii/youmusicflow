@@ -3,8 +3,9 @@ import * as PlatformResolver from '../tools/platformResolver'
 import { getTrayPosition, TrayPosition } from '../tools/getTrayPosition'
 import { getSetting } from '../tools/settings'
 
-export const WINDOW_WIDTH = 375
-export const WINDOW_HEIGHT = 667
+// Creation defaults — positioning uses the live window size (window is resizable)
+export const DEFAULT_WINDOW_WIDTH = 375
+export const DEFAULT_WINDOW_HEIGHT = 667
 
 interface PositionContext {
   mainWindow: BrowserWindow
@@ -13,6 +14,8 @@ interface PositionContext {
 }
 
 export function updateWindowPosition({ mainWindow, tray, offset }: PositionContext) {
+  const [windowWidth, windowHeight] = mainWindow.getSize()
+
   if (PlatformResolver.isWindows()) {
     const trayBounds = tray.getBounds()
     const display = screen.getDisplayMatching(trayBounds)
@@ -22,8 +25,8 @@ export function updateWindowPosition({ mainWindow, tray, offset }: PositionConte
     const trayPosition = getTrayPosition({ trayBounds, displayBounds })
 
     // Default position (Bottom-Right of work area)
-    let x = workArea.x + workArea.width - WINDOW_WIDTH
-    let y = workArea.y + workArea.height - WINDOW_HEIGHT
+    let x = workArea.x + workArea.width - windowWidth
+    let y = workArea.y + workArea.height - windowHeight
 
     const windowPositionSetting = getSetting('windowPosition')
 
@@ -34,16 +37,16 @@ export function updateWindowPosition({ mainWindow, tray, offset }: PositionConte
           y = workArea.y
           break
         case 'top-right':
-          x = workArea.x + workArea.width - WINDOW_WIDTH
+          x = workArea.x + workArea.width - windowWidth
           y = workArea.y
           break
         case 'bottom-left':
           x = workArea.x
-          y = workArea.y + workArea.height - WINDOW_HEIGHT
+          y = workArea.y + workArea.height - windowHeight
           break
         case 'bottom-right':
-          x = workArea.x + workArea.width - WINDOW_WIDTH
-          y = workArea.y + workArea.height - WINDOW_HEIGHT
+          x = workArea.x + workArea.width - windowWidth
+          y = workArea.y + workArea.height - windowHeight
           break
       }
     } else {
@@ -51,30 +54,29 @@ export function updateWindowPosition({ mainWindow, tray, offset }: PositionConte
         case TrayPosition.Left:
           // Taskbar on Left: Window at Bottom-Left (near taskbar)
           x = workArea.x
-          y = workArea.y + workArea.height - WINDOW_HEIGHT
+          y = workArea.y + workArea.height - windowHeight
           break
 
         case TrayPosition.Right:
           // Taskbar on Right: Window at Bottom-Right (near taskbar)
-          x = workArea.x + workArea.width - WINDOW_WIDTH
-          y = workArea.y + workArea.height - WINDOW_HEIGHT
+          x = workArea.x + workArea.width - windowWidth
+          y = workArea.y + workArea.height - windowHeight
           break
 
         case TrayPosition.Top:
           // Taskbar on Top: Window at Top-Right
-          x = workArea.x + workArea.width - WINDOW_WIDTH
+          x = workArea.x + workArea.width - windowWidth
           y = workArea.y
           break
 
         case TrayPosition.Bottom:
           // Taskbar on Bottom: Window at Bottom-Right
-          x = workArea.x + workArea.width - WINDOW_WIDTH
-          y = workArea.y + workArea.height - WINDOW_HEIGHT
+          x = workArea.x + workArea.width - windowWidth
+          y = workArea.y + workArea.height - windowHeight
           break
       }
     }
 
-    mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT)
     mainWindow.setPosition(Math.round(x), Math.round(y))
   } else {
     const trayBounds = tray.getBounds()
@@ -82,18 +84,18 @@ export function updateWindowPosition({ mainWindow, tray, offset }: PositionConte
     const displayBounds = display.bounds
     const trayPosition = getTrayPosition({ trayBounds, displayBounds })
 
-    let x = trayBounds.x + trayBounds.width / 2 - WINDOW_WIDTH / 2
+    let x = trayBounds.x + trayBounds.width / 2 - windowWidth / 2
     let y = trayBounds.y + trayBounds.height + offset.y
 
     if (trayPosition === TrayPosition.Top) {
-      x = trayBounds.x + trayBounds.width / 2 - WINDOW_WIDTH / 2
+      x = trayBounds.x + trayBounds.width / 2 - windowWidth / 2
       y = trayBounds.y + trayBounds.height + offset.y
     }
 
     // Ensure the window is within display bounds
     if (x < displayBounds.x) x = displayBounds.x
-    if (x + WINDOW_WIDTH > displayBounds.x + displayBounds.width) {
-      x = displayBounds.x + displayBounds.width - WINDOW_WIDTH
+    if (x + windowWidth > displayBounds.x + displayBounds.width) {
+      x = displayBounds.x + displayBounds.width - windowWidth
     }
 
     mainWindow.setPosition(Math.round(x), Math.round(y))
@@ -101,8 +103,9 @@ export function updateWindowPosition({ mainWindow, tray, offset }: PositionConte
 }
 
 export function positionOnTrayClickMac({ mainWindow, tray, offset }: PositionContext) {
+  const [windowWidth] = mainWindow.getSize()
   mainWindow.setPosition(
-    tray.getBounds().x - WINDOW_WIDTH + offset.x,
+    tray.getBounds().x - windowWidth + offset.x,
     tray.getBounds().y + tray.getBounds().height + offset.y
   )
 }

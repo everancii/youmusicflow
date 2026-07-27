@@ -1,32 +1,26 @@
-import {
-  app,
-  BrowserWindow,
-  Menu,
-  Tray,
-  screen,
-  globalShortcut,
-  ipcMain,
-  nativeImage,
-  nativeTheme
-} from 'electron'
+import { app, BrowserWindow, Menu, Tray, nativeImage } from 'electron'
 import { createMenuTemplate } from './ui/menuTemplate'
 import * as offsetCalclator from './tools/offsetCalclator'
 import * as PlatformResolver from './tools/platformResolver'
-import { getTrayPosition, TrayPosition } from './tools/getTrayPosition'
-import { getNativeIconName } from './tools/getNativeIconName'
 import { createContextTemplate } from './ui/contextTemplate'
 import path from 'path'
-import { IPCEventNames } from './types/ipc'
-import { getSettings, updateSetting, getSetting } from './tools/settings'
+import { getSetting } from './tools/settings'
+import { createMainWindow } from './main-process/createMainWindow'
+import { createTray } from './main-process/createTray'
+import { createSettingsWindow } from './main-process/createSettingsWindow'
+import { registerIpc } from './main-process/registerIpc'
+import {
+  registerMediaKeys,
+  unregisterMediaKeys
+} from './main-process/registerShortcuts'
+import {
+  updateWindowPosition as positionMainWindow,
+  positionOnTrayClickMac
+} from './main-process/positionWindow'
 
 // Auto-update removed: Microsoft Store handles updates for appx distribution
 
 let mainWindow: BrowserWindow
-let settingsWindow: BrowserWindow | null = null
-let tray: Tray
-
-const WINDOW_WIDTH = 375
-const WINDOW_HEIGHT = 667
 
 if (process.platform === 'darwin') {
   app.name = 'YouMusicFlow'
@@ -57,308 +51,47 @@ app.on('ready', () => {
     }
   }
 
-  mainWindow = new BrowserWindow({
-    width: WINDOW_WIDTH,
-    height: WINDOW_HEIGHT,
-    transparent: true,
-    frame: false,
-    resizable: false,
-    show: false,
-    icon: path.join(__dirname, '../assets', PlatformResolver.isWindows() ? 'icon.ico' : 'icon.png'),
-    webPreferences: {
-      preload: path.join(__dirname, './client/index.js'),
-      contextIsolation: true,
-      nodeIntegration: false,
-      spellcheck: false
-    },
-    alwaysOnTop: getSetting('alwaysOnTop') as boolean
-  })
-
-  // Apply login settings
-  app.setLoginItemSettings({
-    openAtLogin: getSetting('startOnLogin') as boolean
-  })
-
-  const updateDockVisibility = (hide: boolean) => {
-    if (process.platform === 'darwin' && app.dock) {
-      if (hide) {
-        app.dock.hide()
-      } else {
-        app.dock.show()
-        // Delay setting icon slightly to ensure dock has shown
-        setTimeout(() => {
-          const iconPath = path.join(__dirname, '../assets', 'icon.png')
-          const image = nativeImage.createFromPath(iconPath)
-          if (app.dock && !image.isEmpty()) {
-            app.dock.setIcon(image)
-          }
-        }, 200)
-      }
-    }
-  }
-
-  // Apply dock icon setting
-  updateDockVisibility(getSetting('hideDockIcon') as boolean)
-
-  mainWindow.loadURL('https://music.youtube.com')
-
-  const injectCSS = () => {
-    mainWindow.webContents.insertCSS(`
-      html, body {
-        scrollbar-width: none !important; /* Firefox */
-      }
-      * {
-        -ms-overflow-style: none !important; /* IE/Edge */
-      }
-      ::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        background: transparent !important;
-      }
-      *::-webkit-scrollbar {
-        display: none !important;
-        width: 0 !important;
-        height: 0 !important;
-        background: transparent !important;
-      }
-    `)
-  }
-
-  mainWindow.webContents.on('did-finish-load', injectCSS)
-  mainWindow.webContents.on('did-navigate', injectCSS)
-  mainWindow.webContents.on('did-navigate-in-page', injectCSS)
-  mainWindow.webContents.on('dom-ready', injectCSS)
-
-  // if (process.env.NODE_ENV !== 'production') {
-  //   mainWindow.webContents.openDevTools()
-  // }
-
-  tray = new Tray(
-    path.join(__dirname, '../assets', getNativeIconName())
-  )
-
-  // macOS: swap tray icon live when the system theme changes
-  nativeTheme.on('updated', () => {
-    if (PlatformResolver.isMacOS()) {
-      tray.setImage(path.join(__dirname, '../assets', getNativeIconName()))
-    }
-  })
+  const { mainWindow: window, updateDockVisibility } = createMainWindow()
+  mainWindow = window
 
   const offset = offsetCalclator.getOffset()
 
-  mainWindow.on('blur', () => {
-    mainWindow.hide()
-  })
-
   Menu.setApplicationMenu(Menu.buildFromTemplate(createMenuTemplate(app)))
 
-  tray.setToolTip('YouMusicFlow')
+  let tray: Tray
+  const updateWindowPosition = () =>
+    positionMainWindow({ mainWindow, tray, offset })
 
-  const updateWindowPosition = () => {
-    if (PlatformResolver.isWindows()) {
-      const trayBounds = tray.getBounds()
-      const display = screen.getDisplayMatching(trayBounds)
-      const workArea = display.workArea
-      const displayBounds = display.bounds
-      
-      const trayPosition = getTrayPosition({ trayBounds, displayBounds })
-      
-      // Default position (Bottom-Right of work area)
-      let x = workArea.x + workArea.width - WINDOW_WIDTH
-      let y = workArea.y + workArea.height - WINDOW_HEIGHT
-
-      const windowPositionSetting = getSetting('windowPosition')
-
-      if (windowPositionSetting && windowPositionSetting !== 'auto') {
-        switch (windowPositionSetting) {
-          case 'top-left':
-            x = workArea.x
-            y = workArea.y
-            break
-          case 'top-right':
-            x = workArea.x + workArea.width - WINDOW_WIDTH
-            y = workArea.y
-            break
-          case 'bottom-left':
-            x = workArea.x
-            y = workArea.y + workArea.height - WINDOW_HEIGHT
-            break
-          case 'bottom-right':
-            x = workArea.x + workArea.width - WINDOW_WIDTH
-            y = workArea.y + workArea.height - WINDOW_HEIGHT
-            break
-        }
+  tray = createTray({
+    onClick: () => {
+      if (PlatformResolver.isMacOS()) {
+        positionOnTrayClickMac({ mainWindow, tray, offset })
       } else {
-        switch (trayPosition) {
-          case TrayPosition.Left:
-            // Taskbar on Left: Window at Bottom-Left (near taskbar)
-            x = workArea.x
-            y = workArea.y + workArea.height - WINDOW_HEIGHT
-            break
-          
-          case TrayPosition.Right:
-            // Taskbar on Right: Window at Bottom-Right (near taskbar)
-            x = workArea.x + workArea.width - WINDOW_WIDTH
-            y = workArea.y + workArea.height - WINDOW_HEIGHT
-            break
-            
-          case TrayPosition.Top:
-            // Taskbar on Top: Window at Top-Right
-            x = workArea.x + workArea.width - WINDOW_WIDTH
-            y = workArea.y
-            break
-            
-          case TrayPosition.Bottom:
-            // Taskbar on Bottom: Window at Bottom-Right
-            x = workArea.x + workArea.width - WINDOW_WIDTH
-            y = workArea.y + workArea.height - WINDOW_HEIGHT
-            break
-        }
+        updateWindowPosition()
       }
-      
-      mainWindow.setSize(WINDOW_WIDTH, WINDOW_HEIGHT)
-      mainWindow.setPosition(Math.round(x), Math.round(y))
-    } else {
-      const trayBounds = tray.getBounds()
-      const display = screen.getDisplayMatching(trayBounds)
-      const displayBounds = display.bounds
-      const trayPosition = getTrayPosition({ trayBounds, displayBounds })
-
-      let x = trayBounds.x + trayBounds.width / 2 - WINDOW_WIDTH / 2
-      let y = trayBounds.y + trayBounds.height + offset.y
-
-      if (trayPosition === TrayPosition.Top) {
-        x = trayBounds.x + trayBounds.width / 2 - WINDOW_WIDTH / 2
-        y = trayBounds.y + trayBounds.height + offset.y
-      }
-
-      // Ensure the window is within display bounds
-      if (x < displayBounds.x) x = displayBounds.x
-      if (x + WINDOW_WIDTH > displayBounds.x + displayBounds.width) {
-        x = displayBounds.x + displayBounds.width - WINDOW_WIDTH
-      }
-
-      mainWindow.setPosition(Math.round(x), Math.round(y))
+      mainWindow.show()
+    },
+    onRightClick: () => {
+      tray.popUpContextMenu(Menu.buildFromTemplate(createContextTemplate(app)))
     }
-  }
+  })
 
   // Initial position
   updateWindowPosition()
 
-  tray.on('click', () => {
-    if (PlatformResolver.isMacOS()) {
-      mainWindow.setPosition(
-        tray.getBounds().x - 375 + offset.x,
-        tray.getBounds().y + tray.getBounds().height + offset.y
-      )
-    } else {
-      updateWindowPosition()
-    }
-    mainWindow.show()
-  })
-
-  tray.on('right-click', () => {
-    tray.popUpContextMenu(Menu.buildFromTemplate(createContextTemplate(app)))
-  })
-
-  const registerMediaKeys = () => {
-    if (globalShortcut.isRegistered('MediaPlayPause')) return
-
-    globalShortcut.register('MediaPlayPause', () => {
-      mainWindow.webContents.send(IPCEventNames.PLAY_PAUSE)
-    })
-
-    globalShortcut.register('MediaPreviousTrack', () => {
-      mainWindow.webContents.send(IPCEventNames.PREV)
-    })
-
-    globalShortcut.register('MediaNextTrack', () => {
-      mainWindow.webContents.send(IPCEventNames.NEXT)
-    })
-  }
-
-  const unregisterMediaKeys = () => {
-    globalShortcut.unregister('MediaPlayPause')
-    globalShortcut.unregister('MediaPreviousTrack')
-    globalShortcut.unregister('MediaNextTrack')
-  }
-
   if (getSetting('enableMediaKeys') !== false) {
-    registerMediaKeys()
+    registerMediaKeys(mainWindow)
   }
 
-  // Settings Window Handlers
-  // @ts-ignore
-  app.on('open-settings', () => {
-    if (settingsWindow) {
-      settingsWindow.focus()
-      return
-    }
+  createSettingsWindow(app)
 
-    settingsWindow = new BrowserWindow({
-      width: 400,
-      height: 550,
-      title: 'Settings',
-      resizable: true, // Allow resizing to find perfect fit
-      minimizable: false,
-      maximizable: false,
-      autoHideMenuBar: true,
-      icon: path.join(__dirname, '../assets', PlatformResolver.isWindows() ? 'icon.ico' : 'icon.png'),
-      webPreferences: {
-        nodeIntegration: true,
-        contextIsolation: false // For simple settings window
-      }
-    })
-
-    settingsWindow.loadFile(path.join(__dirname, './settings/index.html'))
-
-    settingsWindow.on('closed', () => {
-      settingsWindow = null
-    })
-  })
-
-  ipcMain.handle('get-platform', () => {
-    return process.platform
-  })
-
-  ipcMain.handle('get-settings', () => {
-    return getSettings()
-  })
-
-  ipcMain.handle('get-app-version', () => {
-    return app.getVersion()
-  })
-
-  ipcMain.on('update-setting', (event, key, value) => {
-    updateSetting(key, value)
-    
-    // Apply changes immediately where possible
-    if (key === 'alwaysOnTop') {
-      mainWindow.setAlwaysOnTop(value)
-    }
-    
-    if (key === 'startOnLogin') {
-      app.setLoginItemSettings({
-        openAtLogin: value
-      })
-    }
-    
-    if (key === 'windowPosition') {
-      updateWindowPosition()
-    }
-
-    if (key === 'hideDockIcon') {
-      updateDockVisibility(value)
-    }
-
-    if (key === 'enableMediaKeys') {
-      if (value) {
-        registerMediaKeys()
-      } else {
-        unregisterMediaKeys()
-      }
-    }
+  registerIpc({
+    app,
+    mainWindow,
+    updateDockVisibility,
+    updateWindowPosition,
+    registerMediaKeys: () => registerMediaKeys(mainWindow),
+    unregisterMediaKeys
   })
 })
 

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>YouMusicFlow — Offline</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      background: #030303;
+      color: #fff;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    .wrap {
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      text-align: center;
+      padding: 24px;
+    }
+    .icon { font-size: 48px; opacity: 0.85; }
+    h1 { font-size: 18px; font-weight: 600; }
+    p { font-size: 13px; color: #aaa; max-width: 260px; line-height: 1.5; }
+    button {
+      margin-top: 8px;
+      padding: 10px 28px;
+      border: none;
+      border-radius: 20px;
+      background: #f00;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #d00; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="icon">♪</div>
+    <h1>You're offline</h1>
+    <p>YouTube Music couldn't load. Check your connection — we'll retry automatically when you're back online.</p>
+    <button id="retry">Retry</button>
+  </div>
+  <script>
+    const retry = () => window.appShell && window.appShell.retry()
+    document.getElementById('retry').addEventListener('click', retry)
+    window.addEventListener('online', retry)
+  </script>
+</body>
+</html>

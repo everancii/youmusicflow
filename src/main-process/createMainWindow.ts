@@ -1,7 +1,8 @@
-import { app, BrowserWindow, nativeImage } from 'electron'
+import { app, BrowserWindow, nativeImage, shell } from 'electron'
 import path from 'path'
 import * as PlatformResolver from '../tools/platformResolver'
 import { getSetting } from '../tools/settings'
+import { isAllowedNavigation } from '../tools/navigationPolicy'
 import { WINDOW_WIDTH, WINDOW_HEIGHT } from './positionWindow'
 
 export function createMainWindow() {
@@ -49,6 +50,29 @@ export function createMainWindow() {
   updateDockVisibility(getSetting('hideDockIcon') as boolean)
 
   mainWindow.loadURL('https://music.youtube.com')
+
+  // Keep the window on YTM/auth origins; everything else goes to the default browser
+  mainWindow.webContents.setWindowOpenHandler(({ url }) => {
+    if (isAllowedNavigation(url)) {
+      return { action: 'allow' }
+    }
+    shell.openExternal(url)
+    return { action: 'deny' }
+  })
+
+  mainWindow.webContents.on('will-navigate', (event, url) => {
+    if (!isAllowedNavigation(url)) {
+      event.preventDefault()
+      shell.openExternal(url)
+    }
+  })
+
+  // Offline fallback — ignore ERR_ABORTED (-3, fired by normal cancelled loads)
+  mainWindow.webContents.on('did-fail-load', (event, errorCode, errorDescription, validatedURL, isMainFrame) => {
+    if (isMainFrame && errorCode !== -3) {
+      mainWindow.loadFile(path.join(__dirname, '../offline/offline.html'))
+    }
+  })
 
   const injectCSS = () => {
     mainWindow.webContents.insertCSS(`

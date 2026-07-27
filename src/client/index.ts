@@ -1,5 +1,10 @@
-import { ipcRenderer } from 'electron'
+import { contextBridge, ipcRenderer } from 'electron'
 import * as Controls from './controls'
+
+// Retry bridge for the offline fallback page (preload persists across navigations)
+contextBridge.exposeInMainWorld('appShell', {
+  retry: () => ipcRenderer.send('retry-load')
+})
 
 const style = document.createElement('style')
 style.textContent = `

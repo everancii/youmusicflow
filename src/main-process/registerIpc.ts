@@ -30,6 +30,11 @@ export function registerIpc({
     return app.getVersion()
   })
 
+  // Fired by the offline fallback page's retry button / online event
+  ipcMain.on('retry-load', () => {
+    mainWindow.loadURL('https://music.youtube.com')
+  })
+
   ipcMain.on('update-setting', (event, key, value) => {
     // Renderer input is untrusted — reject unknown keys and wrong-typed values
     if (!isValidSetting(key, value)) {

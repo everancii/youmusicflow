@@ -14,15 +14,15 @@
 ### Tray
 
 - [x] **TRAY-01**: macOS tray icon updates immediately when system theme changes at runtime (template image or `nativeTheme.on('updated')`)
-- [ ] **NOW-01**: User can see current track title/artist as tray tooltip (and tray title on macOS), updating on track change
-- [ ] **NOW-02**: User gets a desktop notification on track change, toggleable in settings
+- [x] **NOW-01**: User can see current track title/artist as tray tooltip (and tray title on macOS), updating on track change
+- [x] **NOW-02**: User gets a desktop notification on track change, toggleable in settings
 
 ### Window & Navigation
 
-- [ ] **NAV-01**: External links clicked inside YouTube Music open in default browser; window navigation restricted to music.youtube.com origins
-- [ ] **NAV-02**: Failed page load (offline) shows a retry screen instead of a blank transparent window
-- [ ] **WIN-01**: User can resize the window; chosen size persists across restarts and positioning math uses live size
-- [ ] **WIN-02**: Window does not hide on blur while `alwaysOnTop` (pin) is enabled
+- [x] **NAV-01**: External links clicked inside YouTube Music open in default browser; window navigation restricted to music.youtube.com origins
+- [x] **NAV-02**: Failed page load (offline) shows a retry screen instead of a blank transparent window
+- [x] **WIN-01**: User can resize the window; chosen size persists across restarts and positioning math uses live size
+- [x] **WIN-02**: Window does not hide on blur while `alwaysOnTop` (pin) is enabled
 
 ### Code Quality
 

@@ -3,10 +3,10 @@ gsd_state_version: '1.0'
 status: executing
 progress:
   total_phases: 4
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 8
-  completed_plans: 4
-  percent: 50
+  completed_plans: 7
+  percent: 87
 ---
 
 # Project State
@@ -16,21 +16,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-07-26)
 
 **Core value:** Media keys and tray interactions must always work.
-**Current focus:** Phase 3 — Robust Shell & Now Playing (planned)
+**Current focus:** Phase 4 — Hygiene & CI (next)
 
 ## Current Position
 
-Phase: 3 of 4 (Robust Shell & Now Playing) — PLANNED
-Plan: 0 of 3 executed (03-01, 03-02, 03-03 ready)
-Status: Phase 3 planned; ready to execute
-Last activity: 2026-07-27 — Phase 3 planned (RESEARCH.md + 3 plans)
+Phase: 3 of 4 (Robust Shell & Now Playing) — COMPLETE
+Plan: 3 of 3 executed (03-01, 03-02, 03-03)
+Status: Phase 3 complete; ready to plan phase 4
+Last activity: 2026-07-27 — Phase 3 executed (3 commits, 9/9 suites, 58 tests)
 
-Progress: [█████░░░░░] 50%
+Progress: [████████░░] 87%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 4
+- Total plans completed: 7
 - Average duration: -
 - Total execution time: -
 
@@ -40,6 +40,7 @@ Progress: [█████░░░░░] 50%
 |-------|-------|-------|----------|
 | 01-reliable-core | 2 | - | - |
 | 02-modular-main-typed-settings | 2 | - | - |
+| 03-robust-shell-now-playing | 3 | - | - |
 
 ## Accumulated Context
 
@@ -67,5 +68,5 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-07-27
-Stopped at: Phase 3 planned; next: execute phase 3
+Stopped at: Phase 3 complete; next: /gsd-plan-phase 4
 Resume file: None

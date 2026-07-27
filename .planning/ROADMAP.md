@@ -59,9 +59,9 @@ Plans:
 **Plans**: 3 plans
 
 Plans:
-- [ ] 03-01: Navigation guard (setWindowOpenHandler + will-navigate) + did-fail-load retry screen
-- [ ] 03-02: Now-playing pipeline (preload observer → IPC → tray tooltip/title + notifications + setting)
-- [ ] 03-03: Resizable window with persisted size + blur-hide respects alwaysOnTop
+- [x] 03-01: Navigation guard (setWindowOpenHandler + will-navigate) + did-fail-load retry screen
+- [x] 03-02: Now-playing pipeline (preload observer → IPC → tray tooltip/title + notifications + setting)
+- [x] 03-03: Resizable window with persisted size + blur-hide respects alwaysOnTop
 
 ### Phase 4: Hygiene & CI
 **Goal**: One lockfile, one CI, honest docs, no dead dependencies

@@ -9,7 +9,12 @@ describe('isAllowedNavigation', () => {
     'https://consent.youtube.com/m',
     'https://consent.google.com/ml',
     'https://www.youtube.com/signin_passive',
-    'https://myaccount.google.com/'
+    'https://myaccount.google.com/',
+    // Seen after a password on a Tunisian network: the session goes through SetSID there.
+    'https://accounts.google.tn/accounts/SetSID?ssdc=1',
+    'https://accounts.google.de/accounts/SetSID',
+    'https://accounts.google.com.ua/accounts/SetSID',
+    'https://accounts.google.co.uk/accounts/SetSID'
   ])('allows %s', url => {
     expect(isAllowedNavigation(url)).toBe(true)
   })
@@ -20,6 +25,10 @@ describe('isAllowedNavigation', () => {
     'https://example.com',
     'https://music.youtube.com.evil.com/phish',
     'https://evilmusic.youtube.com',
+    'https://accounts.google.evil.example/',
+    'https://accounts.google.com.evil.example/',
+    'https://accounts.googleapis.com/',
+    'https://xaccounts.google.tn/',
     'javascript:alert(1)',
     'file:///etc/passwd',
     'ftp://music.youtube.com',

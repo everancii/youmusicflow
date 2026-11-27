@@ -31,3 +31,10 @@ openspec/
 
 # Icons (usually needed, but large)
 # assets/
+
+.orca-tasks/
+
+.projectmem/events.jsonl
+.projectmem/watch.pid
+.projectmem/watch.log
+.projectmem/structure.json

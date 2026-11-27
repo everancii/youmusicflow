@@ -1,0 +1,17 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "YouMusicFlow Spike",
+  "version": "0.1.0",
+  "identifier": "jp.elevenback.youmusicflow.tauri-spike",
+  "app": {
+    "windows": [],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "app",
+    "icon": ["../../assets/icon_256.png", "../../assets/icon.icns"]
+  }
+}

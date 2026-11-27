@@ -55,7 +55,13 @@ struct HiddenAt(Mutex<Option<Instant>>);
 
 pub fn run() {
     let builder = tauri::Builder::default()
-        .plugin(tauri_plugin_opener::init())
+        // The plugin's own link handler swallows every click on a `_blank` link: it has no
+        // permission to open anything, and the click never reaches `on_new_window`.
+        .plugin(
+            tauri_plugin_opener::Builder::new()
+                .open_js_links_on_click(false)
+                .build(),
+        )
         .manage(HiddenAt(Mutex::new(None)));
 
     #[cfg(all(debug_assertions, target_os = "macos"))]
@@ -151,6 +157,17 @@ fn build_window(app: &AppHandle) -> tauri::Result<()> {
                 .unwrap()
                 .push(report.to_owned());
         }
+    });
+
+    // Debug builds name every page load: a white window needs its address in the log.
+    #[cfg(all(debug_assertions, target_os = "macos"))]
+    let builder = builder.on_page_load(|window, payload| {
+        spike_log!(
+            "page load {:?}: {} ({})",
+            payload.event(),
+            payload.url(),
+            window.label()
+        )
     });
 
     // macOS decides in `macos::install_main_frame_policy`, which can tell frames apart.
